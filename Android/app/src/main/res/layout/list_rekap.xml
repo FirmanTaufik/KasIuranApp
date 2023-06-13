@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:background="@color/colorPrimary"
+    android:padding="3dp"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@android:color/black"
+            android:background="@android:color/white"
+            android:padding="5dp"
+            android:id="@+id/noList"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:visibility="gone"
+            android:layout_marginLeft="5dp"
+            android:textColor="@android:color/black"
+            android:background="@android:color/white"
+            android:padding="5dp"
+            android:id="@+id/textPengeluaran"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"/>
+
+
+
+        <TextView
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/white"
+            android:padding="5dp"
+            android:text="Nama Anggota"
+            android:id="@+id/namaAnggota"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/white"
+            android:padding="5dp"
+            android:text="kaS"
+            android:id="@+id/bayar"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/white"
+            android:padding="5dp"
+            android:text="Tanggal Bayar"
+            android:id="@+id/tanggalTransaksi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+</LinearLayout>
+

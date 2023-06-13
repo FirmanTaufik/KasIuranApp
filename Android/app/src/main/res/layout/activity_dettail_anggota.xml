@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DetailAnggota.DettailAnggotaActivity">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.core.widget.NestedScrollView
+            android:fillViewport="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="5dp"
+                    app:cardUseCompatPadding="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp">
+
+                    <RelativeLayout
+                        android:padding="20dp"
+                        android:background="@color/colorPrimary"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_alignParentLeft="true"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/textViewId"
+                                android:textStyle="bold"
+                                style="@style/TextAppearance.AppCompat.Body2"
+                                android:layout_gravity="center_vertical"
+                                android:textColor="@android:color/white"
+                                android:drawableLeft="@drawable/ic_id"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                            <TextView
+                                android:id="@+id/textViewNamaPengguna"
+                                android:textStyle="bold"
+                                style="@style/TextAppearance.AppCompat.Body2"
+                                android:layout_gravity="center_vertical"
+                                android:textColor="@android:color/white"
+                                android:drawableLeft="@drawable/ic_account"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_centerInParent="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:src="@drawable/duit"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"/>
+
+                            <LinearLayout
+                                android:layout_gravity="center"
+                                android:orientation="vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:textColor="@android:color/white"
+                                    android:text="Tabungan"
+                                    style="@style/TextAppearance.AppCompat.Title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                                <TextView
+                                    android:id="@+id/textViewTotalTabungan"
+                                    android:textStyle="bold"
+                                    android:textColor="@android:color/white"
+                                    android:layout_gravity="center_vertical"
+                                    style="@style/TextAppearance.AppCompat.Title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"/>
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/liner"
+                            android:layout_alignParentBottom="true"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:drawableLeft="@drawable/ic_money"
+                                android:textColor="@android:color/white"
+                                android:text=" Sisa Kas Kampung "
+                                style="@style/TextAppearance.AppCompat.Body1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:id="@+id/textViewTotalKas"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white"
+                                style="@style/TextAppearance.AppCompat.Body1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabMore"
+                        app:fabSize="mini"
+                        app:backgroundTint="@android:color/white"
+                        android:layout_gravity="bottom|right"
+                        android:src="@drawable/ic_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.cardview.widget.CardView>
+
+                <com.google.android.material.appbar.AppBarLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/AppTheme.AppBarOverlay">
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tabs"
+                        app:tabIndicatorColor="@color/colorPrimary"
+                        app:tabTextColor="@color/colorPrimary"
+                        android:background="#fff"
+                        app:tabSelectedTextColor="@color/colorPrimary"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    </com.google.android.material.tabs.TabLayout>
+
+                </com.google.android.material.appbar.AppBarLayout>
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </androidx.viewpager.widget.ViewPager>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:visibility="gone"
+        android:id="@+id/fabEdit"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="100dp"
+        android:layout_alignParentRight="true"
+        app:backgroundTint="@android:color/white"
+        android:src="@drawable/ic_edit"
+        app:fabSize="mini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:visibility="gone"
+        android:id="@+id/fabHapus"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentRight="true"
+        app:backgroundTint="@android:color/white"
+        android:src="@drawable/ic_delete"
+        app:fabSize="mini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabLogOut"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentRight="true"
+        app:backgroundTint="@android:color/white"
+        android:src="@drawable/ic_logout"
+        app:fabSize="mini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>
