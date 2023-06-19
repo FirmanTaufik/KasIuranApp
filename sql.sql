@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `tb_anggota` (
   `level_anggota` varchar(50) DEFAULT NULL,
   `nama_anggota` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_anggota`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table db_kas.tb_anggota: ~3 rows (approximately)
 DELETE FROM `tb_anggota`;
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `tb_penarikan` (
   `id_anggota` int DEFAULT NULL,
   `tanggal_penarikan` date DEFAULT NULL,
   PRIMARY KEY (`id_penarikan`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table db_kas.tb_penarikan: ~1 rows (approximately)
 DELETE FROM `tb_penarikan`;
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `tb_pengeluaran` (
   `keperluan` text,
   `tanggal_pengeluaran` date DEFAULT NULL,
   PRIMARY KEY (`id_pengeluaran`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table db_kas.tb_pengeluaran: ~0 rows (approximately)
 DELETE FROM `tb_pengeluaran`;
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `tb_transaksi` (
   `jumlah_transaksi` int NOT NULL DEFAULT '0',
   `tanggal_transaksi` date DEFAULT NULL,
   PRIMARY KEY (`id_transaksi`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table db_kas.tb_transaksi: ~2 rows (approximately)
 DELETE FROM `tb_transaksi`;
