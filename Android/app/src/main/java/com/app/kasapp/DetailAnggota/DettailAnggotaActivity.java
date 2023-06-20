@@ -53,6 +53,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DettailAnggotaActivity extends AppCompatActivity {
+
+
     private SwipeRefreshLayout swipe;
     public static ArrayList <ItemTransaksi> itemTransaksi;
     public static ArrayList <ItemPenarikan> itemPenarikans;
@@ -62,6 +64,8 @@ public class DettailAnggotaActivity extends AppCompatActivity {
     private BottomSheetDialog bottomSheetDialog;
     SharedPreferences sharedpreferences;
     public static final String mypreference = "mypref";
+    ProfileFragment profileFragment = new ProfileFragment();
+    public static JSONObject dataAnggota = new JSONObject();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,31 +82,6 @@ public class DettailAnggotaActivity extends AppCompatActivity {
         fabLogOut = findViewById(R.id.fabLogOut);
         itemTransaksi = new ArrayList<>();
         itemPenarikans = new ArrayList<>();
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        tabLayout.addTab(tabLayout.newTab().setText("TRANSAKSI"));
-        tabLayout.addTab(tabLayout.newTab().setText("PENARIKAN"));
-        final PagerAdapter adapter = new tabsPager(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new
-                                                   TabLayout.OnTabSelectedListener() {
-                                                       @Override
-                                                       public void onTabSelected(TabLayout.Tab tabs) {
-                                                           viewPager.setCurrentItem(tabs.getPosition());
-                                                       }
-
-                                                       @Override
-                                                       public void onTabUnselected(TabLayout.Tab tabs) {
-
-                                                       }
-
-                                                       @Override
-                                                       public void onTabReselected(TabLayout.Tab tabs) {
-
-                                                       }
-
-                                                   });
         swipe = findViewById(R.id.swipe);
         swipe.setRefreshing(true);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -406,9 +385,10 @@ public class DettailAnggotaActivity extends AppCompatActivity {
 
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
+                        dataAnggota  = response.getJSONObject(i);
                         JSONArray jsonArray1 = jsonObject.getJSONArray("DataAnggota");
                         for (int a= 0; a < jsonArray1.length(); a++) {
-                            String id = jsonArray1.getJSONObject(a).getString("id_anggota");
+                            String id = jsonArray1.getJSONObject(a).getString("npm");
                             String nama = jsonArray1.getJSONObject(a).getString("nama_anggota");
                             String tabungan = jsonArray1.getJSONObject(a).getString("tabungan");
                             textViewNamaPengguna.setText(" "+nama);
@@ -430,19 +410,20 @@ public class DettailAnggotaActivity extends AppCompatActivity {
                             itemPenarikans.add(new ItemPenarikan(id_penarikan, jumlah_penarikan, tanggal_penarikan));
 
                         }
-                        Blank2Fragment.listAdapter2.notifyDataSetChanged();
                     } catch (JSONException n) {
                         n.getMessage();
                     }
                 }
 
-                BlankFragment.listAdapter.notifyDataSetChanged();
                 swipe.setRefreshing(false);
+                initTab();
+                Blank2Fragment.listAdapter2.notifyDataSetChanged();
+                BlankFragment.listAdapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                swipe.setRefreshing(false);
                 Log.e("VolleyNotif", error.toString());
                 //progressBar.setVisibility(View.GONE);
             }
@@ -450,6 +431,41 @@ public class DettailAnggotaActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonArrayRequest);
         }
+
+    private void initTab() {
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        if (tabLayout.getTabCount()==0) {
+            tabLayout.addTab(tabLayout.newTab().setText("TRANSAKSI"));
+            tabLayout.addTab(tabLayout.newTab().setText("PENARIKAN"));
+            tabLayout.addTab(tabLayout.newTab().setText("Profile"));
+            final tabsPager adapter = new tabsPager(getSupportFragmentManager(), tabLayout.getTabCount());
+            adapter.addFragment(new BlankFragment());
+            adapter.addFragment(new Blank2Fragment());
+            adapter.addFragment(profileFragment);
+            viewPager.setAdapter(adapter);
+        }
+
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new
+                                                   TabLayout.OnTabSelectedListener() {
+                                                       @Override
+                                                       public void onTabSelected(TabLayout.Tab tabs) {
+                                                           viewPager.setCurrentItem(tabs.getPosition());
+                                                       }
+
+                                                       @Override
+                                                       public void onTabUnselected(TabLayout.Tab tabs) {
+
+                                                       }
+
+                                                       @Override
+                                                       public void onTabReselected(TabLayout.Tab tabs) {
+
+                                                       }
+
+                                                   });
+    }
 
     private void pesanGagal() {
         new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
@@ -474,9 +490,27 @@ public class DettailAnggotaActivity extends AppCompatActivity {
 
             startActivity(new Intent(this, MainActivity.class));
         } else {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            startActivity(intent);
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Konfirmasi")
+                    .setContentText("Apakah Ingin Tutup Aplikasi")
+                    .setConfirmText("Ya")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+                            Intent intent = new Intent(Intent.ACTION_MAIN);
+                            intent.addCategory(Intent.CATEGORY_HOME);
+                            startActivity(intent);
+
+                        }
+                    })
+                    .setCancelButton("Batal", new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+                        }
+                    })
+                    .show();
         }
     }
 }

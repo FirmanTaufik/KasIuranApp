@@ -1,6 +1,17 @@
 <?php
-
+ob_start();
+session_start();
+if (empty($_SESSION['username'])) {
+	header("location:/AplikasiTabunganMahasiswa/login.php");
+	exit;
+}
 include "api/+connection.php";
+
+
+
+  $printTitle = "";  
+  $printMessage= "" ;
+
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +57,7 @@ include "api/+connection.php";
 			<!-- Logo Header -->
 			<div class="logo-header">
 
-				<a href="index.html" class="logo">
+				<a href="#" class="logo">
 					<img width="40" src="assets/img/icon.png" alt="navbar brand" class="navbar-brand">
 				</a>
 				<button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +78,7 @@ include "api/+connection.php";
 			<nav class="navbar navbar-header navbar-expand-lg">
 
 				<div class="container-fluid">
-					<div class="collapse" id="search-nav">
+					<!-- <div class="collapse" id="search-nav">
 						<form class="navbar-left navbar-form nav-search mr-md-3">
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -78,15 +89,15 @@ include "api/+connection.php";
 								<input type="text" placeholder="Search ..." class="form-control">
 							</div>
 						</form>
-					</div>
+					</div> -->
 					<ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
-						<li class="nav-item toggle-nav-search hidden-caret">
+						<!-- <li class="nav-item toggle-nav-search hidden-caret">
 							<a class="nav-link" data-toggle="collapse" href="#search-nav" role="button" aria-expanded="false" aria-controls="search-nav">
 								<i class="fa fa-search"></i>
 							</a>
-						</li>
+						</li> -->
 						<li class="nav-item dropdown hidden-caret">
-							<a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<a onclick="return confirm('Apakah Anda   Ingin Logout?')" class="nav-link " href="logout.php" role="button">
 								<i class="fas fa-sign-in-alt" style="color:white"></i>
 							</a>
 					</ul>
@@ -108,8 +119,8 @@ include "api/+connection.php";
 						<div class="info">
 							<a>
 								<span>
-									Hizrian
-									<span class="user-level">Administrator</span>
+									<?php echo $_SESSION['nama_anggota']; ?>
+									<span class="user-level"><?php echo $_SESSION['username']; ?></span>
 								</span>
 							</a>
 
@@ -135,15 +146,39 @@ include "api/+connection.php";
 											} ?>">
 							<a href="?page=anggota">
 								<i class="fas fa-users"></i>
-								<p>Data Anggota</p>
+								<p>Data Mahasiswa</p>
+							</a>
+						</li>
+						<li class="nav-item <?php if (isset($_GET['page']) && $_GET['page'] == 'transaksi') {
+												echo "active";
+											} ?>">
+							<a href="?page=transaksi">
+								<i class="fas fa-money-bill-wave"></i>
+								<p>Data Transaksi</p>
 							</a>
 						</li>
 						<li class="nav-item <?php if (isset($_GET['page']) && $_GET['page'] == 'penarikan') {
 												echo "active";
 											} ?>">
 							<a href="?page=penarikan">
-								<i class="fas fa-money-bill-wave"></i>
+								<i class="fas fa-money-bill"></i>
 								<p>Data Penarikan</p>
+							</a>
+						</li>
+						<li class="nav-item <?php if (isset($_GET['page']) && $_GET['page'] == 'pengeluaran') {
+												echo "active";
+											} ?>">
+							<a href="?page=pengeluaran">
+								<i class="fas fa-money-check-alt"></i>
+								<p>Data Pengeluaran</p>
+							</a>
+						</li>
+						<li class="nav-item <?php if (isset($_GET['page']) && $_GET['page'] == 'admin') {
+												echo "active";
+											} ?>">
+							<a href="?page=admin">
+								<i class="fas fa-user-cog"></i>
+								<p>Data Admin</p>
 							</a>
 						</li>
 					</ul>
@@ -172,11 +207,21 @@ include "api/+connection.php";
 						case 'anggota':
 							include "pages/anggota.php";
 							break;
+						case 'transaksi':
+							include "pages/transaksi.php";
+							break;
 						case 'penarikan':
 							include "pages/penarikan.php";
 							break;
+						case 'pengeluaran':
+							include "pages/pengeluaran.php";
+							break;
+						case 'admin':
+							include "pages/admin.php";
+							break;
 					}
 				}
+
 
 				?>
 			</div>
@@ -247,23 +292,27 @@ include "api/+connection.php";
 				dom: 'Blfrtip',
 				buttons: [{
 						extend: 'pdf',
-						title: '',
-						messageTop: ''
+						title: '<?php echo $printTitle; ?>',
+						footer: true,
+						messageTop: '<?php echo $printMessage; ?>'
 					},
 					{
 						extend: 'csv',
-						title: '',
-						messageTop: ''
+						title: '<?php echo $printTitle; ?>',
+						footer: true,
+						messageTop: '<?php echo $printMessage; ?>'
 					},
 					{
 						extend: 'excel',
-						title: '',
-						messageTop: ''
+						title: '<?php echo $printTitle; ?>',
+						footer: true,
+						messageTop: '<?php echo $printMessage; ?>'
 					},
 					{
 						extend: 'print',
-						title: '',
-						messageTop: ''
+						title: '<?php echo $printTitle; ?>',
+						footer: true,
+						messageTop: '<?php echo $printMessage; ?>'
 					},
 				],
 				"lengthMenu": [
@@ -327,3 +376,12 @@ include "api/+connection.php";
 </body>
 
 </html>
+
+<?php
+function rupiah($angka)
+{
+
+	$hasil_rupiah = "Rp " . number_format($angka, 2, ',', '.');
+	return $hasil_rupiah;
+}
+?>

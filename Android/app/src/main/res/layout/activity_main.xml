@@ -129,7 +129,7 @@
                     android:textColor="@android:color/white"
                     android:layout_gravity="center_vertical"
                     android:background="@android:color/holo_blue_dark"
-                    android:text="Daftar Anggota"
+                    android:text="Daftar Mahasiswa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 

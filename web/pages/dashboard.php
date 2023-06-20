@@ -14,8 +14,8 @@
                         </div>
                         <div class="col col-stats ml-3 ml-sm-0">
                             <div class="numbers">
-                                <p class="card-category">Visitors</p>
-                                <h4 class="card-title">1,294</h4>
+                                <p class="card-category">Anngota</p>
+                                <h4 class="card-title"><?php echo data()->jumlah_anggota; ?></h4>
                             </div>
                         </div>
                     </div>
@@ -33,8 +33,8 @@
                         </div>
                         <div class="col col-stats ml-3 ml-sm-0">
                             <div class="numbers">
-                                <p class="card-category">Subscribers</p>
-                                <h4 class="card-title">1303</h4>
+                                <p class="card-category">Total Kas</p>
+                                <h4 class="card-title"><?php echo data()->totalKas; ?></h4>
                             </div>
                         </div>
                     </div>
@@ -52,8 +52,8 @@
                         </div>
                         <div class="col col-stats ml-3 ml-sm-0">
                             <div class="numbers">
-                                <p class="card-category">Sales</p>
-                                <h4 class="card-title">$ 1,345</h4>
+                                <p class="card-category">Total Tabungan</p>
+                                <h4 class="card-title"><?php echo data()->totalTabungan; ?></h4>
                             </div>
                         </div>
                     </div>
@@ -71,8 +71,8 @@
                         </div>
                         <div class="col col-stats ml-3 ml-sm-0">
                             <div class="numbers">
-                                <p class="card-category">Order</p>
-                                <h4 class="card-title">576</h4>
+                                <p class="card-category">Total Pengeluaran</p>
+                                <h4 class="card-title"><?php echo data()->totalPengeluaran; ?></h4>
                             </div>
                         </div>
                     </div>
@@ -81,3 +81,37 @@
         </div>
     </div>
 </div>
+
+<?php
+
+function data()
+{
+    include "api/+connection.php";
+    $q1 = mysqli_fetch_assoc(mysqli_query($conn, "SELECT  ifnull(SUM(jumlah_kas),0)   jumlah_kas, 
+   ifnull(SUM(jumlah_tabungan),0)  jumlah_tabungan
+   FROM tb_transaksi"));
+    $jumlah_kas =  $q1['jumlah_kas'];
+    $jumlah_tabungan =  $q1['jumlah_tabungan'];
+
+    $q2 = mysqli_fetch_assoc(mysqli_query($conn, "SELECT ifnull(SUM(jumlah_pengeluaran),0) jumlah_pengeluaran
+FROM tb_pengeluaran"));
+
+    $jumlah_pengeluaran = $q2['jumlah_pengeluaran'];
+
+    $q3 = mysqli_fetch_assoc(mysqli_query($conn, "SELECT ifnull(SUM(jumlah_penarikan),0) jumlah_penarikan
+   FROM tb_penarikan"));
+    $jumlah_penarikan = $q3['jumlah_penarikan'];
+
+    $q4 = mysqli_num_rows(mysqli_query($conn, "SELECT  *from tb_anggota where level_anggota =2 ")); 
+
+    $object = new  stdClass();
+    $object->totalKas = rupiah($jumlah_kas-  $jumlah_pengeluaran);
+    $object->totalTabungan =rupiah($jumlah_tabungan- $jumlah_penarikan) ;
+    $object->totalPengeluaran = rupiah($jumlah_pengeluaran) ;
+    $object->jumlah_anggota = $q4;
+
+    return $object;
+}
+
+
+?>

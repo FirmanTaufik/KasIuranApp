@@ -1,13 +1,3 @@
-<?php
-
-$w = mysqli_query($conn, "SELECT *from tb_anggota where level_anggota =2");
-
-$data = array();
-while ($row = mysqli_fetch_object($w)) {
-    $data[] = $row;
-}
-
-?>
 <div class="page-inner">
     <div class="row">
         <div class="col-md-12">
@@ -16,34 +6,19 @@ while ($row = mysqli_fetch_object($w)) {
                     <!-- <h4 class="card-title">Basic</h4> -->
                     <div class="row">
                         <div class="col-4" style="margin-top: 20px;">
-                            <h4 class="page-title">Data Penarikan Tabungan</h4>
+                            <h4 class="page-title">Data Pengeluaran Kas</h4>
                         </div>
                         <div class="col-8">
                             <form action="" method="get">
-                                <input type="hidden" name="page" value="penarikan">
+                                <input type="hidden" name="page" value="pengeluaran">
                                 <div class="row  ">
-                                    <div class="col-3">
-                                        <div class="form-group">
-                                            <label for="exampleFormControlSelect1">Pilih Anggota</label>
-                                            <select required name="id_anggota" class="form-control" id="exampleFormControlSelect1">
-                                                <option value="0">Semua</option>
-                                                <?php
-                                                foreach ($data as  $value) { ?>
-                                                    <option <?php if (isset($_GET['id_anggota']))   if ($_GET['id_anggota'] == $value->id_anggota) {
-                                                                echo "selected";
-                                                            }   ?> value="<?php echo $value->id_anggota; ?>"><?php echo $value->nama_anggota; ?></option>
-                                                <?php     }
-                                                ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
+                                    <div class="col-5">
                                         <div class="form-group">
                                             <label for="exampleFormControlSelect1">Tanggal Dari</label>
                                             <input value="<?php if (isset($_GET['tanggal_dari'])) echo $_GET['tanggal_dari'];   ?>" required type="date" name="tanggal_dari" class="form-control" id="">
                                         </div>
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-5">
                                         <div class="form-group">
                                             <label for="exampleFormControlSelect1">Tanggal Hingga</label>
                                             <input value="<?php if (isset($_GET['tanggal_hingga'])) echo $_GET['tanggal_dari'];   ?>" required type="date" name="tanggal_hingga" class="form-control" id="">
@@ -80,54 +55,47 @@ while ($row = mysqli_fetch_object($w)) {
                                 <tr>
                                     <th>No</th>
                                     <th>Tanggal</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Jumlah Penarikan</th>
+                                    <th>Jumlah Pengeluaran</th>
+                                    <th>Keperluan</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $printTitle = "Print Data Penarikan Tabungan ";
+                                $printTitle = "Print Data Pengeluaran Kas ";
 
                                 $pos = 1;
-                                $q1 = "SELECT tb_penarikan.*, tb_anggota.nama_anggota
-                                FROM tb_penarikan
-                                LEFT JOIN   tb_anggota ON tb_anggota.id_anggota = tb_penarikan.id_anggota ";
+                                $q1 = "SELECT  * FROM tb_pengeluaran  ";
 
-                                if (isset($_GET['id_anggota'])) {
+                                if (isset($_GET['tanggal_dari'])) {
 
                                     $Tanggal1 = mysqli_real_escape_string($conn, $_GET['tanggal_dari']);
                                     $Tanggal2 = mysqli_real_escape_string($conn, $_GET['tanggal_hingga']);
-                                    $id = mysqli_real_escape_string($conn, $_GET['id_anggota']);
                                     $printMessage= "Dari Tanggal ".$Tanggal1." Hingga ".$Tanggal2 ;
 
-                                    $q1 .= "   where (tb_penarikan.tanggal_penarikan BETWEEN '$Tanggal1' AND '$Tanggal2')   ";
-                                    if ($id != 0) {
-                                        $data = mysqli_fetch_assoc(mysqli_query($conn,"SELECT*FROM tb_anggota WHERE id_anggota = '$id'   "));        
-                                        $printTitle .= $data['nama_anggota'];
-                                        $q1 .= " AND tb_penarikan.id_anggota = '$id'";
-                                    }
+                                    $q1 .= "   where (tanggal_pengeluaran BETWEEN '$Tanggal1' AND '$Tanggal2')   ";
                                 }
 
-                                $q1 .= "GROUP BY tb_penarikan.id_penarikan  order by tb_penarikan.tanggal_penarikan desc";
-                                $totalPenarikan = 0;
+                                $q1 .= "GROUP BY id_pengeluaran  order by tanggal_pengeluaran desc";
+                                $totalPengeluaran = 0;
                                 $w = mysqli_query($conn,  $q1);
 
                                 while ($row = mysqli_fetch_object($w)) {
-                                    $totalPenarikan = $totalPenarikan + $row->jumlah_penarikan;
+
+                                    $totalPengeluaran = $totalPengeluaran + $row->jumlah_pengeluaran;
                                 ?>
                                     <tr>
                                         <td> <?php echo $pos++; ?> </td>
-                                        <td><?php echo $row->tanggal_penarikan; ?></td>
-                                        <td><?php echo $row->nama_anggota; ?></td>
-                                        <td><?php echo rupiah($row->jumlah_penarikan); ?></td>
+                                        <td><?php echo $row->tanggal_pengeluaran; ?></td>
+                                        <td><?php echo rupiah($row->jumlah_pengeluaran); ?></td>
+                                        <td><?php echo $row->keperluan; ?></td>
                                         <td>
                                             <p class="demo">
 
-                                                <button data-toggle="modal" data-target="#exampleModalEdit<?php echo $row->id_penarikan; ?>" type="button" class="btn-sm btn btn-icon btn-round btn-info">
+                                                <button data-toggle="modal" data-target="#exampleModalEdit<?php echo $row->id_pengeluaran; ?>" type="button" class="btn-sm btn btn-icon btn-round btn-info">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <a href="?page=penarikan&act=del&id=<?php echo $row->id_penarikan; ?>" onclick="return confirm('Apakah Anda Benar Benar Ingin Menghapus?')">
+                                                <a href="?page=pengeluaran&act=del&id=<?php echo $row->id_pengeluaran; ?>" onclick="return confirm('Apakah Anda Benar Benar Ingin Menghapus?')">
                                                     <button class="btn-sm btn btn-icon btn-round btn-danger"><i class="fa fa-trash"></i></button>
                                                 </a>
 
@@ -139,9 +107,8 @@ while ($row = mysqli_fetch_object($w)) {
                             <tfoot>
                                 <tr>
                                     <th rowspan="1" colspan="1"> </th>
-                                    <th rowspan="1" colspan="1"> </th>
                                     <th rowspan="1" colspan="1"> Total</th>
-                                    <th rowspan="1" colspan="1"><?php echo rupiah($totalPenarikan); ?></th>
+                                    <th rowspan="1" colspan="1"><?php echo rupiah($totalPengeluaran); ?></th>
                                     <th rowspan="1" colspan="1"> </th>
                                 </tr>
                             </tfoot>
@@ -156,16 +123,13 @@ while ($row = mysqli_fetch_object($w)) {
 
 
 
-$q1 = "SELECT tb_penarikan.*, tb_anggota.nama_anggota
-FROM tb_penarikan
-LEFT JOIN   tb_anggota ON tb_anggota.id_anggota = tb_penarikan.id_anggota 
-GROUP BY tb_penarikan.id_penarikan";
+$q1 = "SELECT  * FROM tb_pengeluaran ";
 $w = mysqli_query($conn, $q1);
 
 while ($row = mysqli_fetch_object($w)) {
 
 ?>
-    <div class="modal fade" id="exampleModalEdit<?php echo $row->id_penarikan; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModalEdit<?php echo $row->id_pengeluaran; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <form action="" method="post">
                 <div class="modal-content">
@@ -176,27 +140,19 @@ while ($row = mysqli_fetch_object($w)) {
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input name="id_penarikan" type="hidden" value="<?php echo $row->id_penarikan; ?>">
+                        <input name="id_pengeluaran" type="hidden" value="<?php echo $row->id_pengeluaran; ?>">
                         <div class="form-group">
-                            <label for="email2">Tanggal Penarikan</label>
-                            <input placeholder="Tanggal Penarikan" type="date" value="<?php echo $row->tanggal_penarikan; ?>" class="form-control" name="tanggal_penarikan" id="">
+                            <label for="email2">Tanggal Pengeluaran</label>
+                            <input placeholder="Tanggal Penarikan" type="date" value="<?php echo $row->tanggal_pengeluaran; ?>" class="form-control" name="tanggal_pengeluaran" id="">
                         </div>
 
                         <div class="form-group">
-                            <label for="exampleFormControlSelect1">Pilih Anggota</label>
-                            <select name="id_anggota" class="form-control" id="exampleFormControlSelect1">
-                                <?php
-                                foreach ($data as  $value) { ?>
-                                    <option <?php if ($value->id_anggota == $row->id_anggota) {
-                                                echo "selected";
-                                            } ?> value="<?php echo $value->id_anggota; ?>"><?php echo $value->nama_anggota; ?></option>
-                                <?php     }
-                                ?>
-                            </select>
+                            <label for="email2">Jumlah Pengeluaran</label>
+                            <input placeholder="Jumlah Penarikan" type="number" value="<?php echo $row->jumlah_pengeluaran; ?>" class="form-control" name="jumlah_pengeluaran" id="">
                         </div>
                         <div class="form-group">
-                            <label for="email2">Jumlah Penarikan</label>
-                            <input placeholder="Jumlah Penarikan" type="number" value="<?php echo $row->jumlah_penarikan; ?>" class="form-control" name="jumlah_penarikan" id="">
+                            <label for="email2">Keperluan</label>
+                            <textarea name="keperluan" required placeholder="Keperluan" type="number" class="form-control" id="" cols="30" rows="5"><?php echo $row->keperluan; ?></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -221,23 +177,16 @@ while ($row = mysqli_fetch_object($w)) {
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="email2">Tanggal Penarikan</label>
-                        <input required placeholder="Tanggal Penarikan" type="date" class="form-control" name="tanggal_penarikan" id="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="exampleFormControlSelect1">Pilih Anggota</label>
-                        <select name="id_anggota" class="form-control" id="exampleFormControlSelect1">
-                            <?php
-                            foreach ($data as  $value) { ?>
-                                <option value="<?php echo $value->id_anggota; ?>"><?php echo $value->nama_anggota; ?></option>
-                            <?php     }
-                            ?>
-                        </select>
+                        <label for="email2">Tanggal Pengeluaran</label>
+                        <input required placeholder="Tanggal Keperluan" type="date" class="form-control" name="tanggal_pengeluaran" id="">
                     </div>
                     <div class="form-group">
-                        <label for="email2">Jumlah Penarikan</label>
-                        <input required placeholder="Jumlah Penarikan" type="number" class="form-control" name="jumlah_penarikan" id="">
+                        <label for="email2">Jumlah Pengeluaran</label>
+                        <input required placeholder="Jumlah Keperluan" type="number" class="form-control" name="jumlah_pengeluaran" id="">
+                    </div>
+                    <div class="form-group">
+                        <label for="email2">Keperluan</label>
+                        <textarea name="keperluan" required placeholder="Keperluan" type="number" class="form-control" id="" cols="30" rows="5"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -252,13 +201,13 @@ while ($row = mysqli_fetch_object($w)) {
 
 if (isset($_GET['act']) == 'del') {
     $id =  $_GET['id'];
-    $q =  "DELETE FROM tb_penarikan WHERE id_penarikan ='$id'";
+    $q =  "DELETE FROM tb_pengeluaran WHERE id_pengeluaran ='$id'";
     $e = mysqli_query($conn, $q);
     if ($e) {
 
         echo "<script>
         alert('Succes di hapus');
-        window.location.href='?page=penarikan';
+        window.location.href='?page=pengeluaran';
         </script>";
     } else {
         alert('gagal di hapus');
@@ -266,52 +215,52 @@ if (isset($_GET['act']) == 'del') {
     }
 }
 if (isset($_POST['edit'])) {
-    $tanggal_penarikan = mysqli_real_escape_string($conn, $_POST['tanggal_penarikan']);
-    $id_penarikan = mysqli_real_escape_string($conn, $_POST['id_penarikan']);
-    $jumlah_penarikan = mysqli_real_escape_string($conn, $_POST['jumlah_penarikan']);
-    $id_anggota = mysqli_real_escape_string($conn, $_POST['id_anggota']);
+    $id_pengeluaran = mysqli_real_escape_string($conn, $_POST['id_pengeluaran']);
+    $tanggal_pengeluaran = mysqli_real_escape_string($conn, $_POST['tanggal_pengeluaran']);
+    $jumlah_pengeluaran = mysqli_real_escape_string($conn, $_POST['jumlah_pengeluaran']);
+    $keperluan = mysqli_real_escape_string($conn, $_POST['keperluan']);
 
-    $q =  "UPDATE tb_penarikan
-	SET 
-		jumlah_penarikan='$jumlah_penarikan',
-		id_anggota='$id_anggota',
-		tanggal_penarikan='$tanggal_penarikan'
-	WHERE id_penarikan='$id_penarikan'";
+    $q =  "UPDATE tb_pengeluaran
+	SET
+		jumlah_pengeluaran='$jumlah_pengeluaran',
+		keperluan='$keperluan',
+		tanggal_pengeluaran='$tanggal_pengeluaran'
+	WHERE id_pengeluaran='$id_pengeluaran'";
 
     $up = mysqli_query($conn, $q);
 
     if ($up) {
         echo "<script>
         alert('sukses menyimpan');
-        window.location.href='?page=penarikan';
+        window.location.href='?page=pengeluaran';
         </script>";
     } else {
         echo "<script>
             alert('gagal menyimpan');
-            window.location.href='?page=penarikan';
+            window.location.href='?page=pengeluaran';
             </script>";
     }
 }
 if (isset($_POST['save'])) {
-    $tanggal_penarikan = mysqli_real_escape_string($conn, $_POST['tanggal_penarikan']);
-    $id_anggota = mysqli_real_escape_string($conn, $_POST['id_anggota']);
-    $jumlah_penarikan = mysqli_real_escape_string($conn, $_POST['jumlah_penarikan']);
+    $tanggal_pengeluaran = mysqli_real_escape_string($conn, $_POST['tanggal_pengeluaran']);
+    $jumlah_pengeluaran = mysqli_real_escape_string($conn, $_POST['jumlah_pengeluaran']);
+    $keperluan = mysqli_real_escape_string($conn, $_POST['keperluan']);
 
-    $q =  "INSERT INTO tb_penarikan
-	(id_penarikan, jumlah_penarikan, id_anggota, tanggal_penarikan)
-	VALUES (NULL,  '$jumlah_penarikan','$id_anggota', '$tanggal_penarikan')";
+    $q =  "INSERT INTO tb_pengeluaran
+	(id_pengeluaran, jumlah_pengeluaran, keperluan, tanggal_pengeluaran)
+	VALUES (NULL, '$jumlah_pengeluaran', '$keperluan', '$tanggal_pengeluaran')";
 
     $up = mysqli_query($conn, $q);
 
     if ($up) {
         echo "<script>
         alert('sukses menyimpan');
-        window.location.href='?page=penarikan';
+        window.location.href='?page=pengeluaran';
         </script>";
     } else {
         echo "<script>
             alert('gagal menyimpan');
-            window.location.href='?page=penarikan';
+            window.location.href='?page=pengeluaran';
             </script>";
     }
 }
